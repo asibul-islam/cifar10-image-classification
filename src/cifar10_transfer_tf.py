@@ -36,17 +36,10 @@ base_model.trainable = False
 # Build model
 model = keras.Sequential([
     keras.Input(shape=(32, 32, 3)),
-
-    # Resize CIFAR-10 images for MobileNetV2
     keras.layers.Resizing(224, 224),
-
     data_augmentation,
-
-    # MobileNetV2 preprocessing: converts pixels to [-1, 1]
-    keras.layers.Lambda(keras.applications.mobilenet_v2.preprocess_input),
-
+    keras.layers.Rescaling(1./127.5, offset=-1),
     base_model,
-
     keras.layers.GlobalAveragePooling2D(),
     keras.layers.Dropout(0.3),
     keras.layers.Dense(10, activation="softmax")
